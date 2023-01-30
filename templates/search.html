@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block content %}
+
+			<main class="content">
+				<div class="container-fluid p-0">
+					<div class="col-12">
+							{% if search.last.name %}
+							<div class="card">
+								<div class="card-header">
+									<h5 class="card-title">Users</h5>
+									<h6 class="card-subtitle text-muted">Qidiruv bo'yicha topilganlar</h6>
+								</div>
+								<div class="card-body">
+									<table id="datatables-buttons" class="table table-striped" style="width:100%">
+										<thead>
+											<tr class="text-center">
+												<th style="width:20%;">Name</th>
+												<th style="width:25%">Address</th>
+												<th style="width:20%">Phone Number</th>
+												<th style="width:20%">Email</th>
+												<th style="width:20%">Date of Birth</th>
+											</tr>
+										</thead>
+										<tbody>
+											{% for i in search %}
+												<tr class="text-center">
+													<td>{{ i.f_name }}  {{ i.name}}</td>
+													<td>{{ i.address }}</td>
+													<td>{{ i.phone }}</td>
+													<td>{{ i.email }}</td>
+													<td>{{ i.birthday }}</td>
+												</tr>
+											{% endfor %}`
+										</tbody>
+									</table>
+									{% if partner.paginator.num_pages > 1 %}
+											<div class="card-footer d-flex justify-content-end">
+												<nav aria-label="Page navigation">
+													<ul class="pagination">
+														{% if partner.has_previous %}
+															<li class="page-item">
+																<a class="page-link" href="?page={{partner.previous_page_number }}">
+																	Previous
+																</a>
+															</li>
+														{% endif %}
+														{% for num in partner.paginator.page_range %}
+														{% if num == partner.number %}
+														<li class="page-item active">
+															<a class="page-link" href="#" tabindex="-1">{{ num }}</a>
+														</li>
+														{% elif num > partner.number|add:'-2' and num < partner.number|add:'2' %}
+														<li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+														{% endif %}
+														{% endfor %}
+														{% if partner.has_next %}
+														<li class="page-item">
+															<a class="page-link" href="?page={{ partner.next_page_number }}">
+																Next
+															</a>
+														</li>
+														{% endif %}
+													</ul>
+												</nav>
+											</div>
+									{% endif %}
+								</div>
+							</div>
+							{% else %}
+							<h1>Qidiruv bo'yicha malumot topilmadi</h1>
+							{% endif %}
+						</div>
+				</div>
+			</main>
+
+{% endblock content %}

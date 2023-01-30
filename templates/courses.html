@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+
+			<main class="content">
+				<button type="button" class="btn btn-success float-right mt-n1" data-toggle="modal" data-target="#centeredModalPrimary"><i class="fas fa-plus"></i> Course</button>
+				<div class="modal fade" id="centeredModalPrimary" tabindex="-1" role="dialog" aria-hidden="true">
+										<div class="modal-dialog modal-dialog-centered" role="document">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h5 class="modal-title">Create new model</h5>
+													<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+												</div>
+														<form action="{% url 'create_course_url' %}" method="post" enctype="multipart/form-data">
+																	{% csrf_token %}
+																	<div class="row" style="padding:10px;">
+																		<div class="form-group col-md-12">
+																			<input type="text" class="form-control" name="name_uz"  placeholder="name_uz" required>
+																		</div>
+																		<div class="form-group col-md-12">
+																			<input type="text" class="form-control" name="name_ru" placeholder="name_ru" required>
+																		</div>
+																		<div class="form-group" style="margin-left:30px;">
+																			<input type="file" name="icon" required>
+																		</div>
+																		<div class="form-group col-md-12">
+																			<div class="modal-footer">
+																			<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+																			<button type="submit" class="btn btn-primary">Save</button>
+																			</div>
+																		</div>
+																	</div>
+														</form>
+												</div>
+											</div>
+										</div>
+				<div class="container-fluid p-0">
+					<h1 class="h3 mb-3">Courses</h1>
+					<div class="row">
+						<div class="col-xl-12">
+							<div class="card">
+								<div class="card-header">
+									<div class="row">
+										<div class="col-12">
+											<div class="row">
+											{% for i in courses %}
+											<div style="margin-left:50px;" class="col-12 col-md-6 col-lg-3 text-center card">
+												<h5 style="margin-top:15px;">{{ i.name_uz }}</h5>
+												<h5 style="margin-top:5px;">{{ i.name_ru }}</h5>
+												<img src="{{ i.icon.url }}" style="margin-left:70px;margin-top:50px;" width="100" height="100" alt="111">
+												<div style="margin-top:50px;margin-left:1px;" class="row mb-2 ml-2;">
+													{% if i.is_active == True %}
+													<form action="{% url 'activate_course_url' i.id %}">
+														<button class="btn btn-success"><i class="fas fa-check"></i></button>
+													</form>
+													{% elif c_num == 6 %}
+													<button type="button" class="btn btn-primary" style="margin-left:10px;" data-toggle="modal" data-target="#sizedModalMd{{i.id}}"><i class="fas fa-square"></i></button>
+													<div class="modal fade" id="sizedModalMd{{i.id}}" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+														<div class="modal-dialog modal-md" role="document">
+															<div class="modal-content">
+																<div class="modal-header">
+																	<h5 class="modal-title">Change active</h5>
+																	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+																		<span aria-hidden="true">×</span>
+																	</button>
+																</div>
+																{% for x in active_courses %}
+																<form action="{% url 'modal_course_url' i.id %}" method="post">
+																	{% csrf_token %}
+																	<div class="row" style="padding:10px;">
+																		<div class="col-3">
+																			<h5>{{ x.name_uz }}</h5>
+																		</div>
+																		<div class="col-3">
+																			<h5>{{ x.name_ru }}</h5>
+																		</div>
+																		<div class="col-3">
+																			<img width="100" height="75" src="{{ x.icon.url }}">
+																		</div>
+																		<div class="col-1">
+																			<input type="hidden" name="modal_id" value="{{ x.id }}">
+																			<button type="submit" class="btn btn-danger" style="margin-top:40px;">-</button>
+																		</div>
+																	</div>
+																</form>
+																{% endfor %}
+															</div>
+														</div>
+													</div>
+													{% else %}
+													<form action="{% url 'activate_course_url' i.id %}">
+														<button class="btn btn-primary"><i class="fas fa-square"></i></button>
+													</form>
+													{% endif %}
+													<button type="button" class="btn btn-warning" data-toggle="modal" style="margin-left:5px;" data-target="#coloredModal{{i.id}}"><i class="fas fa-edit"></i></button>
+													<div class="modal modal-colored modal-warning fade" id="coloredModal{{i.id}}" tabindex="-1" role="dialog" aria-hidden="true">
+														<div class="modal-dialog" role="document">
+															<div class="modal-content" style="background-color:#fff;">
+																<div class="modal-header">
+																	<h3 class="modal-title" style="color:black;">Edit Course</h3>
+																	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+																</div>
+																<form action="{% url 'update_course_url' %}" method="post" enctype="multipart/form-data">
+																	{% csrf_token %}
+																	<div class="row" style="padding:10px;">
+																		<div class="form-group col-md-12">
+																			  <label class="form-label d-flex">Name uz</label>
+																			<input type="text" class="form-control" name="name_uz" value="{{ i.name_uz }}" required>
+																		</div>
+																		<div class="form-group col-md-12">
+																			  <label class="form-label d-flex">Name ru</label>
+																			<input type="text" class="form-control" name="name_ru" value="{{ i.name_ru }}" required>
+																		</div>
+																		<div class="form-group" style="margin-left:30px;">
+																			<input type="file" name="icon">
+																		</div>
+																		</div>
+																		<div class="form-group col-md-12">
+																			<div class="modal-footer">
+																				<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+																				<input type="hidden" name="modal_id" value="{{ i.id }}">
+																				<button type="submit" class="btn btn-secondary">Save changes</button>
+																		</div>
+																	</div>
+																</form>
+															</div>
+														</div>
+													</div>
+													<button type="button" style="margin-left:5px;" class="btn btn-danger" data-toggle="modal" data-target="#coloredModal1{{i.id}}"><i class="fas fa-trash"></i></button>
+													<div class="modal fade" id="coloredModal1{{i.id}}" tabindex="-1" role="dialog" aria-hidden="true">
+																<div class="modal-dialog modal-dialog-centered" style="width:400px" role="document">
+																	<div class="modal-content" style="background-color:#fff;">
+																		<div class="modal-header">
+																			<div class="row center">
+																				<h5 style="color:black;margin-left:40px;padding-top:18px;">I understand the consequences, delete this infos</h5>
+																			</div>
+																		</div>
+																		<form action="{% url 'delete_course_url' i.id %}" method="post">
+																			{% csrf_token %}
+																				<div class="modal-footer">
+																				<button type="button" class="btn btn-success" data-dismiss="modal">No</button>
+																				<button type="submit" class="btn btn-danger">Yes</button>
+																				</div>
+																		</form>
+																	</div>
+																</div>
+													</div>
+												</div>
+											</div>
+											{% endfor %}
+											</div>
+										</div>
+									</div>
+								</div>
+						</div>
+					</div>
+				</div>
+			</main>
+{% endblock content %}
+
+{% block script %}
+	<script>
+		$(function() {
+			// Datatables clients
+			$("#datatables-clients").DataTable({
+				responsive: true,
+				order: [
+					[1, "asc"]
+				]
+			});
+		});
+	</script>
+{% endblock script %}

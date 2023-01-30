@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+
+			<main class="content">
+				<button type="button" class="btn btn-success float-right mt-n1" data-toggle="modal" data-target="#centeredModalPrimary"><i class="fas fa-plus"></i> Banner</button>
+				<div class="modal fade" id="centeredModalPrimary" tabindex="-1" role="dialog" aria-hidden="true">
+										<div class="modal-dialog modal-dialog-centered" role="document">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h5 class="modal-title">Create new model</h5>
+													<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+												</div>
+														<form action="{% url 'create_banner_url' %}" method="post" enctype="multipart/form-data">
+																	{% csrf_token %}
+																	<div class="row" style="padding:10px;">
+																		<div class="form-group col-md-6">
+																			<input type="text" class="form-control" value="{{ i.title_uz }}" name="title_uz"  placeholder="title_uz" required>
+																		</div>
+																		<div class="form-group col-md-6">
+																			<input type="text" class="form-control" value="{{ i.title_ru }}" name="title_ru" placeholder="title_ru" required>
+																		</div>
+																		<div class="col-md-12">
+																			<div class="form-group">
+																			  <textarea class="form-control" name="info_uz" rows="1" placeholder="info_uz..." required></textarea>
+																			</div>
+																		</div>
+																		<div class="col-md-12">
+																			<div class="form-group">
+																			  <textarea class="form-control" name="info_ru" rows="1" placeholder="info_ru..." required></textarea>
+																			</div>
+																		</div>
+																		<div class="form-group" style="margin-left:30px;">
+																			<input type="file" name="photo" required>
+																		</div>
+																		<div class="col-md-12">
+																			<div class="modal-footer">
+																			<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+																			<button type="submit" class="btn btn-primary">Save</button>
+																			</div>
+																		</div>
+																	</div>
+														</form>
+												</div>
+											</div>
+										</div>
+				<div class="container-fluid p-0">
+					<h1 class="h3 mb-3">Banner</h1>
+					<div class="row">
+						<div class="col-xl-12">
+							<div class="card">
+								<div class="card-header">
+									<div class="row">
+										{% for i in banners %}
+										<div class="col-12">
+											<div class="card mb-3">
+											  <div class="row g-0">
+												  <div class="col-md-4">
+													  <div class="card-body">
+														<h3 class="h3">{{ i.title_uz }}</h3>
+														<p class="h4">{{ i.info_uz }}</p>
+													  </div>
+												  </div>
+												  <div class="col-md-4">
+													  <div class="card-body">
+														<h3 class="h3">{{ i.title_ru }}</h3>
+														<p class="h4">{{ i.info_ru }}</p>
+													  </div>
+												  </div>
+												  <div class="col-md-4">
+													  <img src="{{ i.photo.url }}" style="margin-top:40px; , margin-right: 50px; "class="img-fluid rounded-start" alt="...">
+												  </div>
+											  </div>
+												<div class="row mb-2 ml-2">
+													{% if i.is_active == True %}
+													<form action="{% url 'activate_banner_url' i.id %}">
+														<button class="btn btn-success"><i class="fas fa-check"></i></button>
+													</form>
+													{% else %}
+													<form action="{% url 'activate_banner_url' i.id %}">
+														<button class="btn btn-primary"><i class="fas fa-square"></i></button>
+													</form>
+													{% endif %}
+													<button type="button" class="btn btn-warning" style="margin-left:5px;" data-toggle="modal" data-target="#coloredModal{{i.id}}"><i class="fas fa-edit"></i></button>
+													<div class="modal modal-colored modal-warning fade" id="coloredModal{{i.id}}" tabindex="-1" role="dialog" aria-hidden="true">
+														<div class="modal-dialog" role="document">
+															<div class="modal-content" style="background-color:#fff;">
+																<div class="modal-header">
+																	<h3 class="modal-title" style="color:black;">Edit Banner</h3>
+																	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+																</div>
+																<form action="{% url 'update_banner_url' %}" method="post" enctype="multipart/form-data">
+																	{% csrf_token %}
+																	<div class="row" style="padding:10px;">
+																		<div class="form-group col-md-6">
+																			<label class="form-label">Name uz</label>
+																			<input type="text" class="form-control" value="{{ i.title_uz }}" name="title_uz" required>
+																		</div>
+																		<div class="form-group col-md-6">
+																			<label class="form-label">Name ru</label>
+																			<input type="text" class="form-control" value="{{ i.title_ru }}" name="title_ru" required>
+																		</div>
+																		<div class="col-md-12">
+																			<div class="form-group">
+																				<label class="form-label">Text uz</label>
+																			  <textarea class="form-control" name="info_uz" required>{{i.info_uz}}</textarea>
+																			</div>
+																		</div>
+																		<div class="col-md-12">
+																			<div class="form-group">
+																				<label class="form-label">Text ru</label>
+																			  <textarea class="form-control" name="info_ru" required>{{i.info_ru}}</textarea>
+																			</div>
+																		</div>
+																		<div class="form-group" style="margin-left:30px;">
+																			<input type="file" name="photo">
+																		</div>
+																		</div>
+																		<div class="col-md-12">
+																			<div class="modal-footer">
+																				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+																				<input type="hidden" name="modal_id" value="{{ i.id }}">
+																				<button type="submit" class="btn btn-primary">Save changes</button>
+
+																		</div>
+																	</div>
+																</form>
+															</div>
+														</div>
+													</div>
+													<button type="button" style="margin-left:5px;" class="btn btn-danger" data-toggle="modal" data-target="#coloredModal1{{i.id}}"><i class="fas fa-trash"></i></button>
+													<div class="modal fade" id="coloredModal1{{i.id}}" tabindex="-1" role="dialog" aria-hidden="true">
+																<div class="modal-dialog modal-dialog-centered" style="width:400px" role="document">
+																	<div class="modal-content" style="background-color:#fff;">
+																		<div class="modal-header">
+																			<h5 style="color:black;padding-top:18px;">I understand the consequences, delete this infos</h5>
+																		</div>
+																		<form action="{% url 'delete_banner_url' i.id %}" method="post">
+																			{% csrf_token %}
+																				<div class="modal-footer">
+																				<button type="button" class="btn btn-success" data-dismiss="modal">No</button>
+																				<button type="submit" class="btn btn-danger">Yes</button>
+																				</div>
+																		</form>
+																	</div>
+																</div>
+					</div>
+												</div>
+											</div>
+										</div>
+										{% endfor %}
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</main>
+{% endblock content %}
+
+{% block script %}
+	<script>
+		$(function() {
+			// Datatables clients
+			$("#datatables-clients").DataTable({
+				responsive: true,
+				order: [
+					[1, "asc"]
+				]
+			});
+		});
+	</script>
+{% endblock script %}

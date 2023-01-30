@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% block content %}
+			{% if info %}
+				<main class="content">
+				<div class="col-12 col-lg-12">
+							<div class="card">
+								<div class="card-body">
+									<div class="tab-content">
+										<div class="text-center">
+											<div class="row">
+												<div class="col-3">
+													<img src="{{ info.icon.url }}" >
+												</div>
+												<div class="col-3" style="margin-top:20px;">
+													<h1>{{ info.name }}</h1>
+												</div>
+											</div>
+											<div style="margin-top:300px;margin-right:30px;" class="row float-right mt-n1">
+												<a href="{{ info.instagram }}"><img alt="Instagram icon" srcset="https://img.icons8.com/3d-fluency/512/instagram-new.png 2x" style="width: 50px; height: 50px;"></a>
+												<a href="{{ info.facebook }}"><img alt="Facebook icon" srcset="https://img.icons8.com/color/2x/facebook-new.png 2x"></a>
+												<a href="{{ info.telegram }}"><img alt="Telegram App icon" srcset="https://img.icons8.com/color/2x/telegram-app--v2.png 2x"></a>
+												<a href="{{ info.youtube }}"><img srcset="https://img.icons8.com/color/2x/youtube-play.png 2x" alt="YouTube icon" loading="lazy"></a>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#coloredModal{{i.id}}"><i class="fas fa-edit"></i></button>
+					<div class="modal modal-colored modal-warning fade" id="coloredModal{{i.id}}" tabindex="-1" role="dialog" aria-hidden="true">
+																<div class="modal-dialog" role="document">
+																	<div class="modal-content" style="background-color:#fff;">
+																		<div class="modal-header">
+																			<h2 class="modal-title" style="color:black;">Edit</h2>
+																			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+																		</div>
+																		<form action="{% url 'update_info_url' %}" method="post" enctype="multipart/form-data">
+																			{% csrf_token %}
+																			<div class="row" style="padding:10px;">
+																				<div class="form-group col-md-6">
+																					<label class="form-label">Instagram</label>
+																					<input type="text" class="form-control" value="{{ info.instagram }}" name="instagram" required>
+																				</div>
+																				<div class="form-group col-md-6">
+																					<label class="form-label">Telegram</label>
+																					<input type="text" class="form-control" value="{{ info.telegram }}" name="telegram" required>
+																				</div>
+																				<div class="form-group col-md-6">
+																					<label class="form-label">You Tube</label>
+																					<input type="text" class="form-control" value="{{ info.youtube }}" name="youtube" required>
+																				</div>
+																				<div class="form-group col-md-6">
+																					<label class="form-label">Facebook</label>
+																					<input type="text" class="form-control" value="{{ info.facebook }}" name="facebook" required>
+																				</div>
+																				<div class="form-group col-md-6">
+																					<label class="form-label">Company Name</label>
+																					<input type="text" class="form-control" value="{{ info.name }}" name="name" required>
+																				</div>
+																				<div class="form-group col-md-6">
+																					<label class="form-label">Company Brand</label>
+																					<input type="file" name="icon">
+																				</div>
+																			</div>
+																				<div class="modal-footer">
+																				<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+																				<input type="hidden" name="modal_id" value="{{ info.id }}">
+																				<button type="submit" class="btn btn-secondary">Save changes</button>
+																				</div>
+																		</form>
+																	</div>
+																</div>
+															</div>
+					<button type="button" style="margin-left:5px;" class="btn btn-danger" data-toggle="modal" data-target="#coloredModal1{{i.id}}"><i class="fas fa-trash"></i></button>
+					<div class="modal modal-colored modal-warning fade" id="coloredModal1{{i.id}}" tabindex="-1" role="dialog" aria-hidden="true">
+																<div class="modal-dialog" role="document">
+																	<div class="modal-content" style="background-color:#fff;">
+																		<div class="modal-header">
+																			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+																		</div>
+																		<form action="{% url 'info_delete_url' info.id %}" method="post">
+																			{% csrf_token %}
+																				<div class="row center" style="padding-top:18px;">
+																					<h3 style="color:black;">I understand the consequences, delete this infos</h3>
+																				</div>
+																				<div class="modal-footer">
+																				<button type="button" class="btn btn-success" data-dismiss="modal">No</button>
+																				<button type="submit" class="btn btn-danger">Yes</button>
+																				</div>
+																		</form>
+																	</div>
+																</div>
+					</div>
+			</main>
+			{% else %}
+			<div style="padding: 25px;" xmlns="http://www.w3.org/1999/html">
+				<button type="button" class="btn btn-success float-right mt-n1" data-toggle="modal" data-target="#centeredModalPrimary"><i class="fas fa-plus"></i> Infos</button>
+				<div class="modal fade" id="centeredModalPrimary" tabindex="-1" role="dialog" aria-hidden="true">
+											<div class="modal-dialog modal-dialog-centered" role="document">
+												<div class="modal-content">
+													<div class="modal-header">
+														<h5 class="modal-title">Create new model</h5>
+														<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+													</div>
+															<form action="{% url 'create_info_url' %}" method="post" enctype="multipart/form-data">
+																		{% csrf_token %}
+																		<div class="row" style="padding:10px;">
+																			<div class="form-group col-md-12">
+																				<input type="text" class="form-control" name="name"  placeholder="name" required>
+																			</div>
+																			<div class="form-group col-md-12">
+																				<input type="text" class="form-control" name="telegram" placeholder="telegram" required>
+																			</div>
+																			<div class="form-group col-md-12">
+																				<input type="text" class="form-control" name="instagram"  placeholder="instagram" required>
+																			</div>
+																			<div class="form-group col-md-12">
+																				<input type="text" class="form-control" name="youtube" placeholder="youtube" required>
+																			</div>
+																			<div class="form-group col-md-12">
+																				<input type="text" class="form-control" name="facebook"  placeholder="facebook" required>
+																			</div>
+																			<div class="form-group col-md-12">
+																				<input type="file" class="form-control" name="icon" required>
+																			</div>
+																			<div class="modal-footer">
+																			<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+																			<button type="submit" class="btn btn-primary">Save</button>
+																			</div>
+																		</div>
+															</form>
+													</div>
+												</div>
+											</div>
+			</div>
+			{% endif %}
+
+{% endblock content %}
